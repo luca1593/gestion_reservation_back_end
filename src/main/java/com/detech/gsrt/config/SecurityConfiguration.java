@@ -1,43 +1,17 @@
 package com.detech.gsrt.config;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.password.CompromisedPasswordChecker;
-import org.springframework.security.authentication.password.CompromisedPasswordException;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
-import org.springframework.security.web.SecurityFilterChain;
-
 import com.detech.gsrt.services.implementation.UserDetailsServiceImpl;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 
-import java.io.IOException;
 
 @AllArgsConstructor
-@Configuration
-@EnableWebSecurity
+// @Configuration
+// @EnableWebSecurity
 public class SecurityConfiguration {
 
 	private final UserDetailsServiceImpl userDetailsService;
-
+/*
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -55,7 +29,8 @@ public class SecurityConfiguration {
                         "/users/save"
                 );
     }
-
+*/
+    /*
 	public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager)
 			throws Exception {
 
@@ -63,16 +38,16 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(auth -> auth
                         // Autoriser Swagger UI
                         .requestMatchers(
-                                "**/swagger-ui/**",
-                                "**/v3/api-docs/**",
-                                "**/swagger-ui.html"
-                        ).permitAll()
+                        //        "**///swagger-ui/**",
+                        //        "**/v3/api-docs/**",
+                        //        "**/swagger-ui.html"
+                     /*   ).permitAll()
                         // Protéger les autres endpoints
                         .anyRequest().authenticated()
                 ); // ou autre méthode d'authentification
 
-        http.csrf(csrf -> csrf.ignoringRequestMatchers("**/swagger-ui/**", "**/v3/api-docs/**"));
-        http.csrf(AbstractHttpConfigurer::disable)
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("**///swagger-ui/**", "**/v3/api-docs/**"));
+       /* http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                         .and()
@@ -114,6 +89,6 @@ public class SecurityConfiguration {
             }
             this.defaultFailureHandler.onAuthenticationFailure(request, response, exception);
         }
-
+*/
 
 }
