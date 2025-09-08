@@ -5,7 +5,6 @@ import com.detech.gsrt.repository.UtilisateurRepository;
 import com.detech.gsrt.services.UtilisateurService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -24,7 +23,7 @@ public class UtlisateurServiceImpl implements UtilisateurService {
             log.error("L'utilisateur {} est invalide ou null.", utilisateurDto);
             throw new RuntimeException("Utilisateur invalide ou null.");
         }
-        utilisateurDto.setPassword(generateEncodedPassword(utilisateurDto.getPassword()));
+        utilisateurDto.setPassword(/*generateEncodedPassword(*/utilisateurDto.getPassword());
         return UtilisateurDto.fromEntity(utilisateurRepository.save(UtilisateurDto.toEntity(utilisateurDto)));
     }
 
@@ -85,10 +84,10 @@ public class UtlisateurServiceImpl implements UtilisateurService {
                 .map(UtilisateurDto::fromEntity)
                 .toList();
     }
-
+/*
     private String generateEncodedPassword(String motDePasse) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return bCryptPasswordEncoder.encode(motDePasse);
     }
-
+*/
 }
