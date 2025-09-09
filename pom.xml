@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.detech</groupId>
 	<artifactId>gsrt</artifactId>
-	<version>0.0.1-RELEASE</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>gsrt</name>
 	<description>Application de Réservation</description>
 	<url/>
