@@ -5,86 +5,93 @@ pipeline{
         maven "Maven"
     }
 
-    stages {
+    environment {
+        // Variables d'environnement
+        APP_NAME = 'gsrt-app'
+        VERSION = '1.0.0'
+        BUILD_ID = "${currentBuild.number}"
+        WORKSPACE_DIR = "${WORKSPACE}"
+    }
 
+    stages {
         stage('Compilation') {
             steps {
                 echo "Compilation du projet..."
-                sh 'mvn clean compile'
+                sh 'mvn clean compile -DskipTests=true'
             }
         }
-
         stage('Tests unitaires') {
             steps {
                 echo "Exécution des tests..."
                 sh 'mvn test'
             }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml' // Publication des résultats des tests
+                }
+            }
         }
-
         stage('Packaging') {
             steps {
                 echo "Packaging du projet..."
-                sh 'mvn package'
+                sh 'mvn package  -DskipTests=true'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                    echo '✅ Package créé avec succès'
+                }
             }
         }
-
-        stage('Exécution') {
+        stage('Déploiement & Exécution') {
             steps {
-                echo "Lancement de l'application..."
-                //sh 'java -jar target/*.jar'
+                script {
+                    echo '🚀 Lancement de l\'application...'
+                     // Trouver le JAR généré
+                     def jarFile = findFiles(glob: 'target/*.jar')[0].name
+                     def fullJarPath = "${WORKSPACE}/target/${jarFile}"
+                     echo "JAR trouvé: ${fullJarPath}"
+                     // Exécution du script interne (exemple)
+                     if (fileExists('scripts/start-app.sh')) {
+                        sh """
+                            chmod +x scripts/start-app.sh
+                            scripts/start-app.sh ${fullJarPath} ${BUILD_ID}
+                        """
+                     } else {
+                        // Fallback: exécution directe si le script n'existe pas
+                        sh "java -jar ${fullJarPath} --server.port=8080 &"
+                        echo '⚠️ Script interne non trouvé, exécution directe du JAR'
+                     }
+                }
             }
         }
     }
-     post {
-         success {
-             echo "Build réussi. Lancement de l'application..."
+    post {
+        always {
+            echo '📊 Pipeline terminé - Nettoyage en cours...'
+                 // Nettoyage si nécessaire
+            }
+            success {
+                echo '🎉 Pipeline exécuté avec succès!'
+                // Notification de succès
+            }
+            failure {
+                echo '❌ Pipeline échoué!'
+                // Notification d'échec
+                emailext (
+                    subject: "❌ BUILD FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                    body: "La construction a échoué. Consultez: ${env.BUILD_URL}",
+                    to: "luca.adam23@gmail.com"
+                )
+            }
+            unstable {
+                echo '⚠️ Pipeline instable (tests échoués)'
+            }
+        }
 
-             script {
-                 def jarFile = sh(
-                     script: "find target -name '*.jar' | head -n 1",
-                     returnStdout: true
-                 ).trim()
-
-                 if (jarFile) {
-                     echo "Fichier JAR trouvé : ${jarFile}"
-
-                     // Tuer l'ancienne instance si elle existe
-                     echo "Recherche et arrêt de l'ancienne instance..."
-                     sh """
-                         PID=\$(pgrep -f "java -jar ${jarFile}")
-                         if [ ! -z "\$PID" ]; then
-                             echo "Ancienne instance trouvée (PID=\$PID), arrêt..."
-                             kill -9 \$PID
-                         else
-                             echo "Aucune instance existante détectée."
-                         fi
-                     """
-
-                     // Lancer la nouvelle instance en arrière-plan
-                     echo "Lancement de la nouvelle instance..."
-                     sh "nohup java -jar ${jarFile} > app.log 2>&1 &"
-                     echo "Application démarrée. Logs : app.log"
-
-                     // Vérification du port 8080 avec protection
-                     echo "Vérification du démarrage de l'application..."
-                     def responseCode = sh(
-                         script: '''
-                             sleep 5
-                             curl -s -o /dev/null -w '%{http_code}' http://localhost:8081 || echo "000"
-                         ''',
-                         returnStdout: true
-                     ).trim()
-
-                     if (responseCode == '200') {
-                         echo "Application accessible (HTTP 200)"
-                     } else {
-                         echo "Application non accessible (HTTP ${responseCode})"
-                     }
-
-                 } else {
-                     echo "Aucun fichier JAR trouvé dans target/"
-                 }
-             }
-         }
-     }
+        options {
+            timeout(time: 30, unit: 'MINUTES') // Timeout global
+            buildDiscarder(logRotator(numToKeepStr: '10')) // Garder seulement les 10 derniers builds
+        }
+    }
 }
