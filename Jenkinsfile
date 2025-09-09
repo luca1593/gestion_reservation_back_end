@@ -31,7 +31,7 @@ pipeline{
         stage('Exécution') {
             steps {
                 echo "Lancement de l'application..."
-                sh 'java -jar target/gsrt.jar'
+                sh 'java -jar target/*.jar'
             }
         }
     }
