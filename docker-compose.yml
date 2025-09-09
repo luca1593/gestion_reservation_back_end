@@ -1,0 +1,62 @@
+version: "3.9"
+
+networks:
+  backend-db:
+    driver: bridge
+
+services:
+  db:
+    image: mysql:lts
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend-db
+
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    container_name: phpmyadmin-5.2
+    restart: always
+    environment:
+      PMA_HOST: db
+    ports:
+      - "8083:80"
+    networks:
+      - backend-db
+  grstapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: grstapp
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "8080:8080"
+    networks:
+      - backend-db
+
+  smtp4dev:
+    image: rnwood/smtp4dev
+    container_name: smtp4dev
+    restart: always
+    ports:
+      - "143:143"
+      - "2525:25"
+      - "5000:80"
+    networks:
+      - backend-db
+
+volumes:
+  db_data:
+
