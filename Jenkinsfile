@@ -70,7 +70,7 @@ pipeline{
                      def responseCode = sh(
                          script: '''
                              sleep 5
-                             curl -s -o /dev/null -w '%{http_code}' http://localhost:8080 || echo "000"
+                             curl -s -o /dev/null -w '%{http_code}' http://localhost:8081 || echo "000"
                          ''',
                          returnStdout: true
                      ).trim()
