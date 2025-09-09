@@ -50,15 +50,15 @@ pipeline{
 
                      // Tuer l'ancienne instance si elle existe
                      echo "Recherche et arrêt de l'ancienne instance..."
-                     sh """
-                         PID=\$(pgrep -f "java -jar ${jarFile}")
-                         if [ ! -z "\$PID" ]; then
-                             echo "Ancienne instance trouvée (PID=\$PID), arrêt..."
-                             kill -9 \$PID
-                         else
-                             echo "Aucune instance existante détectée."
-                         fi
-                     """
+                    // sh """
+                    //     PID=\$(pgrep -f "java -jar ${jarFile}")
+                    //     if [ ! -z "\$PID" ]; then
+                    //         echo "Ancienne instance trouvée (PID=\$PID), arrêt..."
+                    //         kill -9 \$PID
+                    //     else
+                    //         echo "Aucune instance existante détectée."
+                     //    fi
+                   //  """
 
                      // Lancer la nouvelle instance en arrière-plan
                      echo "Lancement de la nouvelle instance..."
