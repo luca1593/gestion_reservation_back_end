@@ -3,7 +3,7 @@
 JAR_FILE=$1
 BUILD_ID=$2
 PORT=8081
-LOG_DIR="/var/log/gsrt"
+LOG_DIR="/home/server/log/gsrt-app"
 APP_NAME="gsrt"
 
 echo "Démarrage de l'application ${APP_NAME} (Build: ${BUILD_ID})"
