@@ -55,20 +55,15 @@ pipeline {
             steps {
                 script {
                     echo '🚀 Lancement de l\'application...'
-
                     // Trouver le JAR généré
                     def jarFile = findFiles(glob: 'target/*.jar')[0].name
                     def fullJarPath = "${WORKSPACE}/target/${jarFile}"
                     echo "🗂️ JAR trouvé: ${fullJarPath}"
 
                     if (fileExists('scripts/start-app.sh')) {
-                        sh """
-                            chmod +x scripts/start-app.sh
-                            scripts/start-app.sh ${fullJarPath} ${BUILD_ID}
-                        """
+                        sh 'sudo systemctl restart gsrt.service'
                     } else {
                         echo '⚠️ Script de démarrage non trouvé, exécution directe du JAR...'
-                        sh "nohup java -jar ${fullJarPath} --server.port=8081 &"
                     }
                 }
             }
