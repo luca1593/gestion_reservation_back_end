@@ -16,7 +16,7 @@ fi
 
 # Démarrage de la nouvelle instance sans log
 echo "✅ Démarrage de la nouvelle instance..."
-nohup java -jar "$JAR_FILE" \
+exec java -jar "$JAR_FILE" \
     --server.port=$PORT \
     --spring.profiles.active=prod \
     >/dev/null 2>&1 &
