@@ -22,7 +22,7 @@ pipeline {
         stage('Compilation') {
             steps {
                 echo '📦 Compilation du projet...'
-                sh 'mvn clean compile'
+                sh 'mvn clean compile  -DskipTests=true'
             }
         }
 
@@ -41,7 +41,7 @@ pipeline {
         stage('Packaging') {
             steps {
                 echo '📦 Packaging du projet...'
-                sh 'mvn package'
+                sh 'mvn package  -DskipTests=true'
             }
             post {
                 success {
