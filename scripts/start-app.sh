@@ -1,8 +1,8 @@
 #!/bin/bash
 # Script pour démarrer l'application Java sans génération ou lecture de logs
 
-JAR_FILE=$1
-BUILD_ID=$2
+# Lecture des paramètres
+source /tmp/app-params.env
 PORT=8081
 APP_NAME="gsrt"
 

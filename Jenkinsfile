@@ -60,6 +60,14 @@ pipeline {
                     def fullJarPath = "${WORKSPACE}/target/${jarFile}"
                     echo "🗂️ JAR trouvé: ${fullJarPath}"
 
+                    writeFile file: 'app-params.env', text: """
+                    JAR_FILE=${fullJarPath}
+                    BUILD_ID=${BUILD_ID}
+                    """.stripIndent()
+
+                    // Copie ce fichier vers le serveur (si build distant), ou le place dans /tmp
+                    sh 'cp app-params.env /tmp/app-params.env'
+
                     if (fileExists('scripts/start-app.sh')) {
                         sh 'sudo systemctl restart gsrt.service'
                     } else {
