@@ -14,11 +14,6 @@ if [ ! -f "$JAR_FILE" ]; then
     exit 1
 fi
 
-# Arrêt de l'instance précédente si elle tourne
-echo "🛑 Arrêt de l'instance précédente..."
-pkill -f "java -jar.*$JAR_FILE" || true
-sleep 2
-
 # Démarrage de la nouvelle instance sans log
 echo "✅ Démarrage de la nouvelle instance..."
 nohup java -jar "$JAR_FILE" \
@@ -29,10 +24,11 @@ nohup java -jar "$JAR_FILE" \
 # Attente du démarrage
 sleep 5
 
-# Vérification que l'application tourne
 if pgrep -f "java -jar.*$JAR_FILE" > /dev/null; then
+    # Récupération de l'adresse IP locale (IPv4 non-loopback)
+    SERVER_IP=$(hostname -I | awk '{print $1}')
     echo "✅ Application démarrée avec succès !"
-    echo "🌐 URL: http://localhost:$PORT"
+    echo "🌐 URL: http://${SERVER_IP}:${PORT}"
 else
     echo "❌ Échec du démarrage de l'application"
     exit 1
