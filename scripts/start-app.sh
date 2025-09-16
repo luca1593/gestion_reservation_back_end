@@ -4,6 +4,7 @@
 # Lecture des paramètres
 source /tmp/app-params.env
 PORT=8081
+SERVER_ADRESS=0.0.0.0
 APP_NAME="gsrt"
 
 echo "🚀 Démarrage de l'application ${APP_NAME} (Build: ${BUILD_ID})"
@@ -19,6 +20,7 @@ echo "✅ Démarrage de la nouvelle instance..."
 exec java -jar "$JAR_FILE" \
     --server.port=$PORT \
     --spring.profiles.active=prod \
+    --server.address=$SERVER_ADRESS\
     >/dev/null 2>&1 &
 
 # Attente du démarrage
