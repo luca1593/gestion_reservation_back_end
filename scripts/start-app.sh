@@ -29,6 +29,7 @@ if pgrep -f "java -jar.*$JAR_FILE" > /dev/null; then
     SERVER_IP=$(hostname -I | awk '{print $1}')
     echo "✅ Application démarrée avec succès !"
     echo "🌐 URL: http://${SERVER_IP}:${PORT}"
+    echo "🌐 URL: http://${SERVER_IP}:${PORT}/swagger-ui/index.html"
 else
     echo "❌ Échec du démarrage de l'application"
     exit 1
