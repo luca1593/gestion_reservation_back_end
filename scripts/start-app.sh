@@ -2,7 +2,7 @@
 # Script pour démarrer l'application Java sans génération ou lecture de logs
 
 # Lecture des paramètres
-source /tmp/app-params.env
+source /app-params.env
 PORT=8081
 SERVER_ADRESS=0.0.0.0
 APP_NAME="gsrt"
