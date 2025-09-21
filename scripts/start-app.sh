@@ -2,7 +2,8 @@
 # Script pour démarrer l'application Java sans génération ou lecture de logs
 
 # Lecture des paramètres
-source /app-params.env
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}") && pwd)"
+source "$SCRIPT_DIR/app-params.env"
 PORT=8081
 SERVER_ADRESS=0.0.0.0
 APP_NAME="gsrt"
