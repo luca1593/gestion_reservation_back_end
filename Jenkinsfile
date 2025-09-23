@@ -66,12 +66,8 @@ pipeline {
                     """.stripIndent()
 
                 }
-            }
-
-            steps{
                 deploy adapters: [tomcat10(alternativeDeploymentContext: '', credentialsId: '2b628e71-79b5-4c97-9e98-22b6bc8d839c', path: '', url: 'http://12.24.5.100:8080/')], contextPath: 'gsrt', war: ${fullJarPath}
             }
-
         }
     }
 
