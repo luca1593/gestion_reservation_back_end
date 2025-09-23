@@ -45,7 +45,7 @@ pipeline {
             }
             post {
                 success {
-                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
                     echo '✅ Package créé avec succès'
                 }
             }
@@ -65,14 +65,13 @@ pipeline {
                     BUILD_ID=${BUILD_ID}
                     """.stripIndent()
 
-                    if (fileExists('scripts/start-app.sh')) {
-                        sh 'sudo chmod +x scripts/start-app.sh'
-                        sh 'sudo systemctl restart gsrt.service'
-                    } else {
-                        echo '⚠️ Script de démarrage non trouvé, exécution directe du JAR...'
-                    }
                 }
             }
+
+            steps{
+                deploy adapters: [tomcat10(alternativeDeploymentContext: '', credentialsId: '2b628e71-79b5-4c97-9e98-22b6bc8d839c', path: '', url: 'http://12.24.5.100:8080/')], contextPath: 'gsrt', war: ${fullJarPath}
+            }
+
         }
     }
 
@@ -99,6 +98,32 @@ pipeline {
 
         unstable {
             echo '⚠️ Pipeline instable (échec de tests/unitaires)'
+        }
+    }
+}
+
+
+pipeline{
+    agent any
+    tools{
+        maven "LOCAL_MAVEN"
+    }
+    stages{
+        stage('Build'){
+            steps{
+                sh 'mvn clean package'
+            }
+            post{
+                success{
+                    echo "Archiving the artifacts"
+                archiveArtifacts artifacts: "**/target/*.war"
+                }
+            }
+        }
+        stage('Deploy To TomCatServer'){
+            steps{
+                deploy adapters: [tomcat9(credentialsId: '8219abb7-1b49-476a-b4b8-f82fcee3adda', path: '', url: 'http://localhost:8080/')], contextPath: null, war: '**/*.war'
+            }
         }
     }
 }
