@@ -58,11 +58,12 @@ pipeline {
                 script {
                     // Trouver le fichier WAR
                     def warFiles = findFiles(glob: '**/*.war')
-                    if (warFiles.isEmpty()) {
+
+                    if (files.length == 0) {
                         error "❌ Aucun fichier WAR trouvé pour le déploiement"
                     }
-                    def warPath = warFiles[0].path
 
+                    def warPath = warFiles[0].path
                     echo "📦 Fichier à déployer: ${warPath}"
 
                     // Déploiement avec curl
