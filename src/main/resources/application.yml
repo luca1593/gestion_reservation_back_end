@@ -23,5 +23,3 @@ server:
   error:
     whitelabel:
       enabled: false
-  port: 8081
-  address: 0.0.0.0
