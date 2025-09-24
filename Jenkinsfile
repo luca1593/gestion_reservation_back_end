@@ -59,10 +59,10 @@ pipeline {
                 deploy adapters: [
                     tomcat9(
                         credentialsId: '8219abb7-1b49-476a-b4b8-f82fcee3adda',
-                        path: '',
                         url: 'http://localhost:8080/'
                     )
-                ], contextPath: 'gsrt', war: '**/*.war'
+
+                ], contextPath: '/gsrt', war: '**/*.war'
             }
         }
     }
