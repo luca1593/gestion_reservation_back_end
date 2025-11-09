@@ -1,6 +1,7 @@
 package com.detech.gsrt.controller.api;
 
 import com.detech.gsrt.dto.TableDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.MediaType;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin(origins = "*", originPatterns = "*")
+@Tag(name = "Liste des API sur les tables")
 @RequestMapping("/tables")
 public interface TableController {
     @PostMapping(path = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

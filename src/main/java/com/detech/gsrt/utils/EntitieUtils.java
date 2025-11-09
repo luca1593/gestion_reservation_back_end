@@ -1,5 +1,7 @@
 package com.detech.gsrt.utils;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.lang.reflect.Field;
 import java.util.Objects;
 
@@ -19,6 +21,11 @@ public class EntitieUtils {
                 }
             }
         }
+    }
+
+    public static String generateEncodedPassword(String motDePasse) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        return bCryptPasswordEncoder.encode(motDePasse);
     }
 
 }

@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface UtilisateurService {
 
-    UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto);
-    UtilisateurDto modifierUtilisateur(Long id, UtilisateurDto utilisateurDto);
-    void supprimerUtilisateur(Long id);
-    UtilisateurDto trouverParId(Long id);
-    UtilisateurDto trouverParEmail(String email);
-    List<UtilisateurDto> listerUtilisateurs();
+    UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto) throws Exception;
+    UtilisateurDto modifierUtilisateur(Long id, UtilisateurDto utilisateurDto) throws Exception;
+    void supprimerUtilisateur(Long id) throws Exception;
+    UtilisateurDto trouverParId(Long id) throws Exception;
+    UtilisateurDto trouverParEmail(String email) throws Exception;
+    List<UtilisateurDto> listerUtilisateurs() throws Exception;
 }

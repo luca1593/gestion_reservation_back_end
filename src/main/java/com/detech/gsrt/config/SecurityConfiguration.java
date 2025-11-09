@@ -1,31 +1,27 @@
 package com.detech.gsrt.config;
 
-import com.detech.gsrt.services.implementation.UserDetailsServiceImpl;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.detech.gsrt.services.ApplicationUserDetailsService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.password.CompromisedPasswordChecker;
-import org.springframework.security.authentication.password.CompromisedPasswordException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -33,7 +29,11 @@ import java.io.IOException;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-	private final UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private ApplicationUserDetailsService applicationUserDetailsService;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -41,56 +41,58 @@ public class SecurityConfiguration {
 	}
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers(
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/v2/api-docs/**", // For older Swagger 2.x
-                        "/swagger-resources/**",
-                        "/webjars/**",
-                        "/users/save"
-                );
-    }
-
-
 	public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager)
 			throws Exception {
 
-        http.cors(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests(auth -> auth
-                        // Autoriser Swagger UI
-                        .requestMatchers(
-                               "**/swagger-ui/**",
-                              "**/v3/api-docs/**",
-                                "**/swagger-ui.html"
-                       ).permitAll()
-                        // Protéger les autres endpoints
-                        .anyRequest().authenticated()
-                ); // ou autre méthode d'authentification
+        List<String> publicEndpoints = List.of(
+                "/public",
+                "/authenticate",
+                "/users/save",
+                "/v2/api-docs",
+                "/v3/api-docs/**",
+                "/swagger-resources/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/webjars/**",
+                "/configuration/ui",
+                "/configuration/security"
+        );
 
-        http.csrf(csrf -> csrf.ignoringRequestMatchers("**/swagger-ui/**", "**/v3/api-docs/**"));
-        /*http.csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                        .and()
-                        .formLogin((login) -> login
-                                .failureHandler(new CompromisedPasswordAuthenticationFailureHandler())
-                        ));
-*/
-    //   http.addFilterBefore(this.applicationRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(this.applicationUserDetailsService)
+                .passwordEncoder(passwordEncoder());
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.cors();
+        http.authorizeHttpRequests(auth -> auth
+
+                .requestMatchers("/us").hasRole("MANAGER")
+                .requestMatchers("/ui").hasRole("CLIENT")
+                // Autoriser Swagger UI
+                .requestMatchers(publicEndpoints.toArray(new String[0])).permitAll()
+                // Protéger les autres endpoints
+                .anyRequest().authenticated()
+        ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // ou autre méthode d'authentification
+        http.addFilterBefore(this.jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
 	}
 
-	@Bean
-	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-		AuthenticationManagerBuilder authenticationManagerBuilder = http
-				.getSharedObject(AuthenticationManagerBuilder.class);
-		//authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-		return authenticationManagerBuilder.build();
-	}
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*")); // à adapter pour prod
+        configuration.setAllowedMethods(List.of("GET","POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
+    @Bean
+    public AuthenticationManager authenticationManager(final AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+/*
     @Bean
     public CompromisedPasswordChecker compromisedPasswordChecker() {
         return new HaveIBeenPwnedRestApiPasswordChecker();
@@ -112,5 +114,14 @@ public class SecurityConfiguration {
             }
             this.defaultFailureHandler.onAuthenticationFailure(request, response, exception);
         }
+    }
+
+ */
+
+    private List<String> getManagerUrls(){
+        List<String> urls = new ArrayList<>();
+
+
+        return urls;
     }
 }

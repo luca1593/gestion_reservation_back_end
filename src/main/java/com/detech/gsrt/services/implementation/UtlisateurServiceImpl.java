@@ -18,7 +18,7 @@ public class UtlisateurServiceImpl implements UtilisateurService {
     private UtilisateurRepository utilisateurRepository;
 
     @Override
-    public UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto) {
+    public UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto) throws Exception {
         if (utilisateurDto == null) {
             log.error("L'utilisateur {} est invalide ou null.", utilisateurDto);
             throw new RuntimeException("Utilisateur invalide ou null.");
@@ -28,7 +28,7 @@ public class UtlisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public UtilisateurDto modifierUtilisateur(Long id, UtilisateurDto utilisateur) {
+    public UtilisateurDto modifierUtilisateur(Long id, UtilisateurDto utilisateur) throws Exception{
 
         if (id == null) {
             log.error("L'id de l'utilisateur {} est invalide ou null.", id);
@@ -51,7 +51,7 @@ public class UtlisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public void supprimerUtilisateur(Long id) {
+    public void supprimerUtilisateur(Long id) throws Exception{
         if (id == null){
             log.error("L'utilisateur {} est invalide ou null.", id);
             throw new RuntimeException("L'id de l'utilisateur est null");
@@ -60,7 +60,7 @@ public class UtlisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public UtilisateurDto trouverParId(Long id) {
+    public UtilisateurDto trouverParId(Long id) throws Exception{
         if (id == null){
             log.error("L'utilisateur {} est invalide ou null.", id);
             throw new RuntimeException("L'id de l'utilisateur est null");
@@ -69,7 +69,7 @@ public class UtlisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public UtilisateurDto trouverParEmail(String email) {
+    public UtilisateurDto trouverParEmail(String email) throws Exception{
         if (!StringUtils.hasLength(email)){
             log.error("L'utilisateur {} est invalide ou null.", email);
             throw new RuntimeException("L'adresse mail de l'utilisateur est null");
@@ -78,7 +78,7 @@ public class UtlisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public List<UtilisateurDto> listerUtilisateurs() {
+    public List<UtilisateurDto> listerUtilisateurs() throws Exception{
         return utilisateurRepository.findAll()
                 .stream()
                 .map(UtilisateurDto::fromEntity)

@@ -2,7 +2,7 @@ spring:
   application:
     name: gsrt
   datasource:
-    url: jdbc:mysql://localhost:3306/grst?createDatabaseIfNotExist=true
+    url: jdbc:mysql://12.24.5.100:3306/grst?createDatabaseIfNotExist=true
     username: luca
     password: luca1593
     driver-class-name: com.mysql.cj.jdbc.Driver

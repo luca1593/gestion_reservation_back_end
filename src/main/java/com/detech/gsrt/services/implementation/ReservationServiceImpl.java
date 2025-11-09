@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +35,7 @@ public class ReservationServiceImpl implements ReservationService {
     private CreneauService creneauService;
 
     @Override
-    public ReservationDto creerReservation (ReservationDto reservation) {
+    public ReservationDto creerReservation (ReservationDto reservation) throws Exception {
         if (reservation == null){
             log.error("La réservation {} est null ou invalide", reservation);
             throw new RuntimeException("La réservation est null ou invalide");

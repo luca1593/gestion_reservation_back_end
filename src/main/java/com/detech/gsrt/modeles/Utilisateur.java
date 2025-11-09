@@ -1,7 +1,12 @@
 package com.detech.gsrt.modeles;
 
+import com.detech.gsrt.config.Views;
 import com.detech.gsrt.utils.Role;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,5 +38,12 @@ public class Utilisateur extends AbstractEntity {
     private List<Avis> avis;
 
     @Column(name = "password")
+    @JsonView(Views.Internal.class)
     private String password;
+
+    @Column(name = "active")
+    private boolean isActive;
+
+    private String test;
+
 }

@@ -19,7 +19,7 @@ public class ReservationControllerImpl implements ReservationController {
     }
 
     @Override
-    public ReservationDto creerReservation (ReservationDto reservation) {
+    public ReservationDto creerReservation (ReservationDto reservation) throws Exception {
         return reservationService.creerReservation(reservation);
     }
 
