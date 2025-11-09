@@ -44,6 +44,4 @@ public class Utilisateur extends AbstractEntity {
     @Column(name = "active")
     private boolean isActive;
 
-    private String test;
-
 }
