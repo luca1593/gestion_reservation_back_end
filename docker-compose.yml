@@ -3,19 +3,22 @@ version: "3.9"
 networks:
   backend-db:
     driver: bridge
+volumes:
+  db_data:
+    name: db_data
 
 services:
   db:
-    image: mysql:lts
+    image: mysql:8
     container_name: db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: luca1593
+      MYSQL_DATABASE: grst
+      MYSQL_USER: luca
+      MYSQL_PASSWORD: luca1593
     ports:
-      - "3306:3306"
+      - "3302:3306"
     volumes:
       - db_data:/var/lib/mysql
     networks:
@@ -23,7 +26,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin:5.2
-    container_name: phpmyadmin-5.2
+    container_name: phpmyadmin5.2
     restart: always
     environment:
       PMA_HOST: db
@@ -38,25 +41,13 @@ services:
     container_name: grstapp
     restart: always
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
-      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
-      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/grst?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: luca
+      SPRING_DATASOURCE_PASSWORD: luca1593
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
     ports:
-      - "8080:8080"
+      - "8084:8080"
     networks:
       - backend-db
-
-  smtp4dev:
-    image: rnwood/smtp4dev
-    container_name: smtp4dev
-    restart: always
-    ports:
-      - "143:143"
-      - "2525:25"
-      - "5000:80"
-    networks:
-      - backend-db
-
-volumes:
-  db_data:
-
