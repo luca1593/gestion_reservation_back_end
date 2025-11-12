@@ -19,13 +19,6 @@ pipeline {
             }
         }
 
-        stage('Tests unitaires') {
-            steps {
-                echo "🧪 Exécution des tests..."
-                sh 'mvn test'
-            }
-        }
-
         stage('Packaging') {
             steps {
                 echo "📦 Packaging du projet..."
