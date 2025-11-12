@@ -39,7 +39,7 @@ pipeline {
                 // On arrête les anciens containers s’ils tournent
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down || true"
                 // On reconstruit et relance les services
-                sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d"
             }
         }
 
