@@ -21,7 +21,7 @@ public interface UtlisateurController {
 
     @PostMapping(path = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @JsonView(Views.Public.class)
-    ResponseEntity<?> creerUtilisateur(@RequestBody @NotNull @Valid UtilisateurDto utilisateurDto);
+    ResponseEntity<?> creerUtilisateur(@RequestBody @NotNull @Valid @JsonView(Views.Private.class)UtilisateurDto utilisateurDto);
 
     @PostMapping(path = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @JsonView(Views.Public.class)

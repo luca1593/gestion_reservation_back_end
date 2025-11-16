@@ -41,9 +41,11 @@ public class UtilisateurDto {
     private Role role;
     @JsonIgnore
     private List<ReservationDto> reservationDtoList;
-    private Instant creationDate;
-    private Instant lastModifiedDate;
     @JsonView(Views.Internal.class)
+    private Instant creationDate;
+    @JsonView(Views.Internal.class)
+    private Instant lastModifiedDate;
+    @JsonView(Views.Private.class)
     private String password;
     @JsonIgnore
     private boolean isActive;
