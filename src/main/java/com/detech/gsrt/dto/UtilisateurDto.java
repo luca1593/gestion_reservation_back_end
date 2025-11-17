@@ -26,26 +26,26 @@ public class UtilisateurDto {
     @NotNull(message = "Le nom de l'utilisateur est obligatoire")
     @Schema(description = "Nom de l'utilisateur",name = "nom",type = "string", example = "Adam", requiredMode = Schema.RequiredMode.REQUIRED)
     @Size(max = 32, message = "La longueur du champ \"nom\" ne doit pas dépasser les 32 caractère.")
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Creation.class)
     private String nom;
 
     @Schema(description = "Adresse mail de l'utilisateur",name = "email",type = "string", example = "exemple@exemple.com", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "Veuillez renseigner l'adresse mail de l'utilisateur")
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "l'adresse mail n'est pas valide")
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Creation.class)
     private String email;
 
     @Schema(description = "Role de l'utilisateur",name = "role",allowableValues = {"CLIENT", "GESTIONAIRE"}, example = "CLIENT", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "Veuillez renseigner le role de l'utilisateur")
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Creation.class)
     private Role role;
     @JsonIgnore
     private List<ReservationDto> reservationDtoList;
-    @JsonView(Views.Internal.class)
+    @JsonView(Views.Secret.class)
     private Instant creationDate;
-    @JsonView(Views.Internal.class)
+    @JsonView(Views.Secret.class)
     private Instant lastModifiedDate;
-    @JsonView(Views.Private.class)
+    @JsonView(Views.Creation.class)
     private String password;
     @JsonIgnore
     private boolean isActive;
@@ -60,7 +60,6 @@ public class UtilisateurDto {
                 .email(utilisateur.getEmail())
                 .creationDate(utilisateur.getCreationDate())
                 .lastModifiedDate(utilisateur.getLastModifiedDate())
-                .password(utilisateur.getPassword())
                 .isActive(utilisateur.isActive())
                 .role(utilisateur.getRole()).build();
     }
