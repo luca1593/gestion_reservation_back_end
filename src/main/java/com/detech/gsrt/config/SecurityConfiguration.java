@@ -64,9 +64,8 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors();
         http.authorizeHttpRequests(auth -> auth
-
-                .requestMatchers("/us").hasRole("MANAGER")
-                .requestMatchers("/ui").hasRole("CLIENT")
+                //.requestMatchers("/us").hasRole("MANAGER")
+                //.requestMatchers("/ui").hasRole("CLIENT")
                 // Autoriser Swagger UI
                 .requestMatchers(publicEndpoints.toArray(new String[0])).permitAll()
                 // Protéger les autres endpoints
