@@ -19,7 +19,9 @@ public interface TableController {
     TableDto modifierTable(@PathVariable("id") Long id,@RequestBody @NotNull @Valid TableDto table);
     @DeleteMapping(path = "/delete/{id}")
     void supprimerTable(@PathVariable("id") Long id);
-    TableDto trouverTable(Long id);
+
+    @GetMapping(path = "/find/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    TableDto trouverTable(@PathVariable("id") Long id);
     @GetMapping(path = "/disponible", produces = MediaType.APPLICATION_JSON_VALUE)
     List<TableDto> listerTablesDisponibles();
 

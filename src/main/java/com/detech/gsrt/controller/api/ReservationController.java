@@ -22,7 +22,7 @@ public interface ReservationController {
     void annulerReservation(@PathVariable("id") Long id) throws IllegalAccessException;
     ReservationDto trouverReservation(Long id);
     @GetMapping(path = "/byuser/{iduser}", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<ReservationDto> listerReservationsParUtilisateur(Long userId);
+    List<ReservationDto> listerReservationsParUtilisateur(@PathVariable("iduser") Long userId);
     @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     List<ReservationDto> listerToutesReservations();
 
