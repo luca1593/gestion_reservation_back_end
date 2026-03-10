@@ -29,7 +29,7 @@ pipeline {
         stage('Construction de l’image Docker') {
             steps {
                 echo "🐳 Construction de l’image Docker de l’application..."
-                sh "docker build -t ${APP_NAME}:latest ."
+                sh "docker build --no-cache -t ${APP_NAME}:latest ."
             }
         }
 
@@ -38,6 +38,10 @@ pipeline {
                 echo "🚀 Lancement des containers avec Docker Compose..."
                 // On arrête les anciens containers s’ils tournent
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down || true"
+
+                sh '''docker stop gestionreservation-grstapp || true
+                      docker rm gestionreservation-grstapp || true
+                '''
                 // On reconstruit et relance les services
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} up -d"
             }
